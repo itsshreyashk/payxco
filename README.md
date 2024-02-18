@@ -1,6 +1,5 @@
 # Payx.co
 
 ---
----
 
 `Payment express.`
