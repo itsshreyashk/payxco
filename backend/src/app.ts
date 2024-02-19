@@ -2,6 +2,10 @@ import express, { Application, json, Request, Response } from 'express';
 import http from 'http';
 import cors from 'cors';
 import dotenv from 'dotenv';
+//File imports
+import DB from './webutils/db';
+import SessionManager from './webutils/secure';
+
 dotenv.config();
 const app: Application = express();
 const server: http.Server = http.createServer(app);
