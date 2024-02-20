@@ -1,59 +1,50 @@
-import Redis from 'ioredis';
-
-const redis = new Redis();
-
+interface Session {
+    id: string,
+    username: string,
+    password: string,
+}
 export default class SessionManager {
-    private id: string;
-    private TTL_SECONDS: number = 7 * 24 * 60 * 60; // 7 days in seconds
-
-    constructor(id: string) {
-        this.id = id;
+    private sessions: Session[];
+    constructor() {
+        this.sessions = [];
     }
-
-    async addSession(username: string, password: string): Promise<boolean> {
-        try {
-            await redis.hmset(this.id, 'username', username, 'password', password);
-            await redis.expire(this.id, this.TTL_SECONDS);
-            return true;
-        } catch (err: any) {
-            console.log(`There is an error ${err.message}`);
-            return false;
+    async getUniqueId(): Promise<string> {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+        let ID = '';
+        for (let i = 0; i < 20; i++) {
+            ID += characters.charAt(Math.floor(Math.random() * characters.length));
         }
+        return ID;
     }
-
-    async isSessionExist(): Promise<boolean> {
-        const exists = await redis.exists(this.id);
-        return exists === 1;
-    }
-
-    async getSessionData(): Promise<{ username: string, password: string } | null> {
+    async addSession(id: string, username: string, password: string): Promise<void> {
         try {
-            const exists = await redis.exists(this.id);
-            if (exists === 1) {
-                const userData = await redis.hmget(this.id, 'username', 'password');
-                if (userData[0] && userData[1]) {
-                    return { username: userData[0], password: userData[1] };
-                } else {
-                    console.log(`Error retrieving user data for session ID "${this.id}" from Redis hash`);
-                    return null;
-                }
+            this.sessions.push({
+                id: id,
+                username: username,
+                password: password,
+            });
+        } catch (err: any) {
+            console.log(`Unable to add id : ${id}`);
+        }
+
+    }
+    async getSessionData(id: string) {
+        try {
+            const session: any = this.sessions.find(session => session.id === id);
+            if (session) {
+                return { username: session.username, password: session.password };
             } else {
-                console.log(`Session ID "${this.id}" does not exist in the Redis hash`);
-                return null;
+                return null; // Or handle the case where the session is not found
             }
         } catch (err: any) {
-            console.log(`There is an error ${err.message}`);
             return null;
         }
     }
-
-    async removeSession(): Promise<boolean> {
+    async removeSession(id: string) {
         try {
-            const removed = await redis.del(this.id);
-            return true;
+            this.sessions = this.sessions.filter(session => session.id !== id);
         } catch (err: any) {
-            console.log(`There is an error ${err.message}`);
-            return false;
+            console.log(`Unable to delete id : ${id}`);
         }
     }
 }
