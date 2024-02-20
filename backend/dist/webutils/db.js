@@ -22,12 +22,6 @@ class DB {
             age: Number,
             phone: Number,
             email: String,
-            data: {
-                creds: {
-                    balance: Number,
-                    credit: Number,
-                }
-            }
         });
         this.User = mongoose_1.default.model('User', userSchema);
     }
@@ -42,8 +36,23 @@ class DB {
                     email: email,
                 });
             }
-            catch (error) {
-                console.error('Error adding user:', error);
+            catch (err) {
+                console.error('Error adding user:', err);
+            }
+        });
+    }
+    removeUser(username, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (yield this.checkUser(username, password)) {
+                    yield this.User.deleteOne({ username: username });
+                }
+                else {
+                    console.error('User not found.');
+                }
+            }
+            catch (err) {
+                console.error('Error removing user:', err);
             }
         });
     }
@@ -51,6 +60,17 @@ class DB {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield this.User.findOne({ username, password });
             return (user) ? true : false;
+        });
+    }
+    sendUserData(username, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (yield this.checkUser(username, password)) {
+                const user = yield this.User.findOne({ username, password });
+                return { user };
+            }
+            else {
+                return null;
+            }
         });
     }
 }

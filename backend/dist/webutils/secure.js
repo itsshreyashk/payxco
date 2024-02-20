@@ -15,9 +15,10 @@ class SessionManager {
     }
     getUniqueId() {
         return __awaiter(this, void 0, void 0, function* () {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
             let ID = '';
-            for (let i = 0; i < 20; i++) {
+            const idealLength = 20;
+            for (let i = 0; i < idealLength; i++) {
                 ID += characters.charAt(Math.floor(Math.random() * characters.length));
             }
             return ID;

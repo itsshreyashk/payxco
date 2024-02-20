@@ -11,7 +11,7 @@ export default class SessionManager {
     async getUniqueId(): Promise<string> {
         const characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
         let ID: string = '';
-        const idealLength : number = 20;
+        const idealLength: number = 20;
         for (let i = 0; i < idealLength; i++) {
             ID += characters.charAt(Math.floor(Math.random() * characters.length));
         }
@@ -29,7 +29,7 @@ export default class SessionManager {
         }
 
     }
-    async getSessionData(id: string) {
+    async getSessionData(id: string): Promise<any> {
         try {
             const session: any = this.sessions.find(session => session.id === id);
             if (session) {
