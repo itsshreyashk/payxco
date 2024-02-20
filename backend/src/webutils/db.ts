@@ -19,23 +19,22 @@ export default class DB {
         });
         this.User = mongoose.model('User', userSchema);
     }
-    async addUser(username: string, password: string, age: number, phone: number) {
+    async addUser(username: string, password: string, age: number, phone: number, email: string) {
         try {
             await this.User.create({
-                username,
-                password,
-                age,
-                phone
+                username: username,
+                password: password,
+                age: age,
+                phone: phone,
+                email: email,
             });
-
-            console.log('User added successfully.');
         } catch (error) {
             console.error('Error adding user:', error);
         }
     }
 
     async checkUser(username: string, password: string) {
-        const user = await this.User.findOne({ username, password });
+        const user: any = await this.User.findOne({ username, password });
         return (user) ? true : false;
     }
 }
