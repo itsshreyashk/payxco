@@ -10,12 +10,6 @@ export default class DB {
             age: Number,
             phone: Number,
             email: String,
-            data: {
-                creds: {
-                    balance: Number,
-                    credit: Number,
-                }
-            }
         });
         this.User = mongoose.model('User', userSchema);
     }
@@ -28,13 +22,31 @@ export default class DB {
                 phone: phone,
                 email: email,
             });
-        } catch (error) {
-            console.error('Error adding user:', error);
+        } catch (err: any) {
+            console.error('Error adding user:', err);
         }
     }
-
-    async checkUser(username: string, password: string) {
+    async removeUser(username: string, password: string) {
+        try {
+            if (await this.checkUser(username, password)) {
+                await this.User.deleteOne({ username: username });
+            } else {
+                console.error('User not found.');
+            }
+        } catch (err: any) {
+            console.error('Error removing user:', err);
+        }
+    }
+    async checkUser(username: string, password: string): Promise<boolean> {
         const user: any = await this.User.findOne({ username, password });
         return (user) ? true : false;
+    }
+    async sendUserData(username: string, password: string): Promise<any> {
+        if (await this.checkUser(username, password)) {
+            const user = await this.User.findOne({ username, password });
+            return { user }
+        } else {
+            return null;
+        }
     }
 }

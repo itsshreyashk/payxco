@@ -9,9 +9,10 @@ export default class SessionManager {
         this.sessions = [];
     }
     async getUniqueId(): Promise<string> {
-        const characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
-        let ID : string = '';
-        for (let i = 0; i < 20; i++) {
+        const characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+        let ID: string = '';
+        const idealLength : number = 20;
+        for (let i = 0; i < idealLength; i++) {
             ID += characters.charAt(Math.floor(Math.random() * characters.length));
         }
         return ID;
