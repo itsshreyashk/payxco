@@ -11,7 +11,7 @@ export default class SessionManager {
     async getUniqueId(): Promise<string> {
         const characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
         let ID: string = '';
-        const idealLength: number = 20;
+        const idealLength: number = 30;
         for (let i = 0; i < idealLength; i++) {
             ID += characters.charAt(Math.floor(Math.random() * characters.length));
         }
